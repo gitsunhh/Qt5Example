@@ -12,6 +12,10 @@
 
 ![logtext](test-result/qDebug_log.png)
 ## Reference
+[Qt documentation - QDebug Class](https://doc.qt.io/qt-6/qdebug.html)
+
+[QtMessageHandler](https://doc.qt.io/qt-5/qtglobal.html#qInstallMessageHandler)
+
 [QT重定向QDEBUG，自定义一个简易的日志管理类](https://www.freesion.com/article/49341199626/)
 
 [Qt - 消息重定向(输出日志)](https://blog.csdn.net/qq_39453936/article/details/120675366)
