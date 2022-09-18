@@ -5,7 +5,7 @@
 #include <QThread>
 #include <QTextStream>
 #include <QDateTime>
- 
+
 LogManager::LogManager()
 {
     //initManager();
@@ -53,9 +53,12 @@ LogManager *LogManager::getInstance()
     static LogManager instance;
     return &instance;
 }
+#include "LogColorForConcole.h"
 
 void LogManager::outputLog(QtMsgType type, const QMessageLogContext &context, const QString &msg)
-{
+{    
+    if (msg.isNull() || msg.isEmpty()) 
+        return;
     //如果要写文件需要加锁，因为函数调用在debug调用线程
     QMutexLocker locker(&logMutex);
     QString out_text;
@@ -69,11 +72,20 @@ void LogManager::outputLog(QtMsgType type, const QMessageLogContext &context, co
         case QtFatalMsg: stream<<"[Fatal]   "; break;
         default: stream<<"[Unknown] "; break;
     }
- 
-    //加个线程id用于测试
-    stream<<QDateTime::currentDateTime().toString("[yyyy-MM-dd hh:mm:ss] ")
-            <<msg;
-         //<<QThread::currentThreadId();
+
+    // // 线程ID
+    // auto tid = QThread::currentThreadId();
+    // context需加宏 QT_MESSAGELOGCONTEXT
+    // //文件名
+    // const char *filecall = context.file ? context.file : "";
+    // //函数名
+    // const char *funccall = context.function ? context.function : "";
+    // // 行数
+    // int line = context.line;
+
+
+    stream << QDateTime::currentDateTime().toString("[yyyy-MM-dd hh:mm:ss] ")
+           << msg;
  
     // //到时产生新文件
     // if(file.isOpen()){
@@ -97,7 +109,7 @@ void LogManager::outputLog(QtMsgType type, const QMessageLogContext &context, co
     if(file.isOpen()){
         //写入文件
         stream.setDevice(&file);
-        stream<<out_text<<endl;
+        stream << out_text << endl;
     }
  
     //发送信号给需要的对象，如ui上显示日志
@@ -110,20 +122,26 @@ void LogManager::outputLog(QtMsgType type, const QMessageLogContext &context, co
     QString cmd_text;
     stream.setString(&cmd_text);
     switch (type) {
-    //debug绿色
-    case QtDebugMsg: stream<<"\033[32m"; break;
-        //info蓝色
-    case QtInfoMsg: stream<<"\033[34m"; break;
-        //warning黄色
-    case QtWarningMsg: stream<<"\033[33m"; break;
-        //critical黑底白字
-    case QtCriticalMsg: stream<<"\033[0;37;40m"; break;
-        //fatal黑底红字
+        case QtDebugMsg: 
+            stream<< logCommands[LogType::FrontPurple]; 
+            break; 
+        case QtInfoMsg: 
+            stream<< logCommands[LogType::FrontGreen]; 
+            break; 
+        case QtWarningMsg: 
+            stream<< logCommands[LogType::FrontYellow]; 
+            break; 
+        case QtCriticalMsg: 
+            stream<< logCommands[LogType::FrontRed]; 
+            break;//"\033[0;37;40m"黑底白字
         //qFatal表示致命错误，默认处理会报异常的
-    case QtFatalMsg: stream<<"\033[0;31;40m"; break;
-        //defualt默认颜色
-    default: stream<<"\033[0m"; break;
+        case QtFatalMsg: 
+            stream<<logCommands[LogType::FrontRed]; 
+            break;//"\033[0;31;40m"黑底红字
+        default: 
+            stream<<logCommands[0]; 
+            break;
     }
-    stream<<out_text<<"\033[0m";
-    defaultOutput(type,context,cmd_text);
+    stream << out_text << logCommands[0];
+    defaultOutput(type, context, cmd_text);
 }

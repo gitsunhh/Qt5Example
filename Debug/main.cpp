@@ -1,14 +1,10 @@
-﻿#include <QMainWindow>
-#include <QApplication>
+﻿#include <QApplication>
 #include <QDebug>
 
-
-#include <QApplication>
 #include <QMutex>
 #include <QMutexLocker>
 #include <QFile>
 #include <QTextStream>
-#include <QDebug>
  
 //重定向qdebug输出到文件
 void myMessageHandle(QtMsgType , const QMessageLogContext& , const QString& msg)
@@ -28,14 +24,16 @@ void myMessageHandle(QtMsgType , const QMessageLogContext& , const QString& msg)
 #include "LogManager.h"
 int main(int argc, char *argv[])
 {
+    //推荐方法：设置重定向的日志类
     LogManager::getInstance()->initManager();//初始化
 
-    //设置重定向操作的函数
+    //方法2：设置重定向操作的函数
     //qInstallMessageHandler(myMessageHandle);
 
-    QApplication a(argc,argv);
-    QMainWindow w;
-    w.show();
+    //方法3：设置输出格式
+    //qSetMessagePattern("%{time yyyy-MM-dd hh:mm:ss}--[%{type}]--%{function}:%{message}");
+
+    QCoreApplication a(argc, argv);
 
     qDebug("This is a debug message");
     qInfo("This is a info message");
