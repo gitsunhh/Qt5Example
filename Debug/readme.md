@@ -59,12 +59,12 @@ DEFINES += QT_MESSAGELOGCONTEXT
 [QT重定向QDEBUG，自定义一个简易的日志管理类](https://www.freesion.com/article/49341199626/)
 
 [Qt - 消息重定向(输出日志)](https://blog.csdn.net/qq_39453936/article/details/120675366)
-<<<<<<< HEAD
-=======
 
 [qDebug用法详解](https://blog.csdn.net/qq_41673920/article/details/119800322)
 
 [QT日志模块的个性化使用](http://www.cleartechfei.com/2022/06/qt%E6%97%A5%E5%BF%97%E6%A8%A1%E5%9D%97%E7%9A%84%E4%B8%AA%E6%80%A7%E5%8C%96%E4%BD%BF%E7%94%A8/)
+
+
 ### 指定qDebug的输出格式
 ```
 int main(){
@@ -90,4 +90,3 @@ int main(){
 %{time boot} | 自软件运行以来的时间
 %{time [format]} | 当前时间，支持自定义时间戳格式
 %{backtrace [depth=N] [separator="…"]} | 程序异常时的堆栈信息
->>>>>>> 6320ee4 (update)
